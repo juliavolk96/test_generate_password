@@ -16,6 +16,6 @@ class PasswordsController < ApplicationController
     }
     generator = PronouncablePasswordGenerator.new(options)
     @password = generator.generate
-    render :new
+    redirect_to root_path(password: @password)
   end
 end
