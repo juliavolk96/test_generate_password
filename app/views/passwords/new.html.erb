@@ -12,9 +12,9 @@
     <label for="password_length">Password Length:</label>
     <%= form.number_field :password_length, value: 12, min: 5, max: 12 %>
   </div>
-  <div id="non-letter-options" style="display: none;">
+  <div id="non-letter-options">
     <label for="non_letter_count">Non-letter Count:</label>
-    <%= form.number_field :non_letter_count, value: 1, min: 1, max: 4 %>
+    <%= form.number_field :non_letter_count, value: 1, min: 1, max: 4, disabled: true %>
   </div>
   <div>
     <%= form.submit "Generate" %>
@@ -27,23 +27,15 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const nonLetterOptions = document.getElementById('non-letter-options');
+    const nonLetterCountField = document.getElementById('non_letter_count');
     const addNonLetterCheckbox = document.getElementById('add_non_letter');
     
     if (addNonLetterCheckbox) {
       addNonLetterCheckbox.addEventListener('change', function() {
-        if (addNonLetterCheckbox.checked) {
-          nonLetterOptions.style.display = 'block';
-        } else {
-          nonLetterOptions.style.display = 'none';
-        }
+        nonLetterCountField.disabled = !addNonLetterCheckbox.checked;
       });
 
-      if (addNonLetterCheckbox.checked) {
-        nonLetterOptions.style.display = 'block';
-      } else {
-        nonLetterOptions.style.display = 'none';
-      }
+      nonLetterCountField.disabled = !addNonLetterCheckbox.checked;
     }
   });
 </script>
