@@ -16,6 +16,7 @@ class PasswordsController < ApplicationController
     }
     generator = PronouncablePasswordGenerator.new(options)
     @password = generator.generate
-    redirect_to root_path(password: @password)
+
+    redirect_to root_path(password: @password, case: params[:case], add_non_letter: params[:add_non_letter], password_length: params[:password_length], non_letter_count: params[:non_letter_count])
   end
 end
