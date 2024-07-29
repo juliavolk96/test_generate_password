@@ -22,8 +22,8 @@
 <% end %>
 
 <div id="password-output">
-  <% if @password %>
-    <p>Your password: <span id="generated-password"><%= @password %></span></p>
+  <% if flash[:password] %>
+    <p>Your password: <span id="generated-password"><%= flash[:password] %></span></p>
   <% end %>
 </div>
 
