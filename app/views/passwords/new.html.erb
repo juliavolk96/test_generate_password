@@ -1,20 +1,20 @@
 <h1>Pronouncable Password Generator</h1>
-<%= form_with url: root_path, method: :post do |form| %>
+<%= form_with url: root_path, method: :post, local: true do |form| %>
   <div>
     <label for="case">Case Option:</label>
-    <%= form.select :case, options_for_select([['Lowercase', 'lowercase'], ['Uppercase', 'uppercase'], ['Mixed', 'mixed'], ['Capitalize', 'capitalize']]) %>
+    <%= form.select :case, options_for_select([['Lowercase', 'lowercase'], ['Uppercase', 'uppercase'], ['Mixed', 'mixed'], ['Capitalize', 'capitalize']], local_assigns[:case_option] || @case_option) %>
   </div>
   <div>
     <label for="add_non_letter">Add Non-letter Characters:</label>
-    <%= form.check_box :add_non_letter, id: 'add_non_letter' %>
+    <%= form.check_box :add_non_letter, id: 'add_non_letter', checked: local_assigns[:add_non_letter] || @add_non_letter %>
   </div>
   <div>
     <label for="password_length">Password Length:</label>
-    <%= form.number_field :password_length, value: 12, min: 5, max: 12 %>
+    <%= form.number_field :password_length, value: local_assigns[:password_length] || @password_length, min: 5, max: 12 %>
   </div>
   <div id="non-letter-options">
     <label for="non_letter_count">Non-letter Count:</label>
-    <%= form.number_field :non_letter_count, value: 1, min: 1, max: 4, disabled: true %>
+    <%= form.number_field :non_letter_count, value: local_assigns[:non_letter_count] || @non_letter_count, min: 1, max: 4 %>
   </div>
   <div>
     <%= form.submit "Generate" %>
@@ -22,20 +22,25 @@
 <% end %>
 
 <div id="password-output">
-  <p>Your password: <span id="generated-password"><%= @password %></span></p>
+  <p>Your password: <span id="generated-password"><%= local_assigns[:password] || @password %></span></p>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  function setupNonLetterOptions() {
     const nonLetterCountField = document.getElementById('non_letter_count');
     const addNonLetterCheckbox = document.getElementById('add_non_letter');
     
-    if (addNonLetterCheckbox) {
+    if (addNonLetterCheckbox && nonLetterCountField) {
       addNonLetterCheckbox.addEventListener('change', function() {
-        nonLetterCountField.disabled = !addNonLetterCheckbox.checked;
+        nonLetterCountField.disabled = !this.checked;
       });
 
       nonLetterCountField.disabled = !addNonLetterCheckbox.checked;
     }
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupNonLetterOptions);
+
+  const observer = new MutationObserver(setupNonLetterOptions);
+  observer.observe(document.body, { childList: true, subtree: true });
 </script>

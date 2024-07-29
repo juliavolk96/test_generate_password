@@ -1,10 +1,10 @@
 class PasswordsController < ApplicationController
   def new
     @password = params[:password]
-    @case_option = params[:case] || :lowercase
+    @case_option = params[:case] || 'lowercase'
     @add_non_letter = params[:add_non_letter] == "1"
     @password_length = params[:password_length] || 12
-    @non_letter_count = params[:non_letter_count] || 0
+    @non_letter_count = params[:non_letter_count] || 1
   end
 
   def create
@@ -16,6 +16,13 @@ class PasswordsController < ApplicationController
     }
     generator = PronouncablePasswordGenerator.new(options)
     @password = generator.generate
-    redirect_to root_path(password: @password)
+    
+    render :new, locals: { 
+      password: @password, 
+      case_option: params[:case],
+      add_non_letter: params[:add_non_letter],
+      password_length: params[:password_length],
+      non_letter_count: params[:non_letter_count]
+    }
   end
 end
